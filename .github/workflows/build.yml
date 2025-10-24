@@ -47,8 +47,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Render Redeploy
-        run: |
-          curl -X POST "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
-            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
-            -H "Content-Type: application/json" \
-            -d '{"clearCache": true}'
+        if: github.ref == 'refs/heads/master'
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
+          github_deployment: true
